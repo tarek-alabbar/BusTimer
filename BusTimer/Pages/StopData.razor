@@ -1,0 +1,60 @@
+﻿@page "/request/{myStopId}"
+
+@inject IHttpClientFactory _clientFactory
+@inject NavigationManager navigationManager
+
+
+<h3>Stop id:@myStopId</h3>
+
+@if (string.IsNullOrWhiteSpace(errorString) == false)
+{
+    <div class="h2">@errorString</div>
+}
+else if (request is null)
+{
+    <div class="h4">Loading...</div>
+}
+else
+{
+    <div class="card-columns">
+        @foreach (var service in request.services)
+        {
+            @foreach (var departture in service.departures)
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">@departture.service_name</h6>
+                        <h7 class="card-text">@departture.minutes</h7>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+
+@code {
+    RequestModel request;
+    string errorString;
+    [Parameter]
+    public string myStopId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"https://tfeapp.com/api/website/stop_times.php?stop_id={myStopId}");
+
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage httpResponse = await client.SendAsync(httpRequest);
+
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            request = await httpResponse.Content.ReadFromJsonAsync<RequestModel>();
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"There was an error getting bus info: {httpResponse.ReasonPhrase}";
+        }
+    }
+}
