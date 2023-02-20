@@ -2,6 +2,7 @@
 {
     public class DepartureModel
     {
+        public string stop_id { get; set; }
         public string service_name { get; set; }
         public string destination { get; set; }
         public string departure_time { get; set; }

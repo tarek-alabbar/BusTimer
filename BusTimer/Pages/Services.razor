@@ -19,7 +19,14 @@ else
     <div class="card-columns">
         @foreach (var service in request.services)
         {
-            @foreach (var departture in service.departures)
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Bus number @service.service_name going to @service.departures[0].destination </h6>
+                    <h7 class="card-text">Next bus will arrive in @service.first_departure min(s)</h7>
+                    <button @onclick="@(() => NavigateToBusPage(service.departures[0].stop_id))">Click for more times.</button>
+                </div>
+            </div>
+            @*@foreach (var departture in service.departures)
             {
                 <div class="card">
                     <div class="card-body">
@@ -27,7 +34,7 @@ else
                         <h7 class="card-text">@departture.minutes</h7>
                     </div>
                 </div>
-            }
+            }*@
         }
     </div>
 }
@@ -40,7 +47,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"https://tfeapp.com/api/website/stop_times.php?stop_id={myStopId}");
 
         var client = _clientFactory.CreateClient();
@@ -56,5 +63,10 @@ else
         {
             errorString = $"There was an error getting bus info: {httpResponse.ReasonPhrase}";
         }
+    }
+
+    private void NavigateToBusPage(string value)
+    {
+        navigationManager.NavigateTo($"/request/{value}");
     }
 }
