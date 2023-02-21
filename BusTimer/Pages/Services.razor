@@ -23,18 +23,14 @@ else
                 <div class="card-body">
                     <h6 class="card-title">Bus number @service.service_name going to @service.departures[0].destination </h6>
                     <h7 class="card-text">Next bus will arrive in @service.first_departure min(s)</h7>
-                    <button @onclick="@(() => NavigateToBusPage(service.departures[0].stop_id))">Click for more times.</button>
+                    <h8>Also in: </h8>
+                    @for (int i = 1; i < service.departures.Length; i++)
+                    {
+                        <h8>@service.departures[i].minutes, </h8>
+                    }
+                    <h8>min</h8>
                 </div>
             </div>
-            @*@foreach (var departture in service.departures)
-            {
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="card-title">@departture.service_name</h6>
-                        <h7 class="card-text">@departture.minutes</h7>
-                    </div>
-                </div>
-            }*@
         }
     </div>
 }
@@ -63,10 +59,6 @@ else
         {
             errorString = $"There was an error getting bus info: {httpResponse.ReasonPhrase}";
         }
-    }
 
-    private void NavigateToBusPage(string value)
-    {
-        navigationManager.NavigateTo($"/request/{value}");
     }
 }
