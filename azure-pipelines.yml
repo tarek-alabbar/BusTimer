@@ -31,7 +31,7 @@ steps:
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: '$(azureSubscription)'
+    azureSubscription: 'Pay-As-You-Go(171b0520-b899-4024-a6f5-9d98540b88e1)'
     appType: 'webApp'
     WebAppName: 'BusTime'
     packageForLinux: '$(build.artifactStagingDirectory)\WebApp.zip'
